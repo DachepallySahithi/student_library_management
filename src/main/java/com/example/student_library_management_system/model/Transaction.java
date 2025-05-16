@@ -1,6 +1,5 @@
 package com.example.student_library_management_system.model;
 
-
 import com.example.student_library_management_system.enums.TransactionStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -48,7 +47,7 @@ public class Transaction {
     @JoinColumn
     private Card card;
 
-    @JsonBackReference
+    @JsonBackReference //back reference that omits during serialization process
     @ManyToOne
     @JoinColumn
     private Book book;

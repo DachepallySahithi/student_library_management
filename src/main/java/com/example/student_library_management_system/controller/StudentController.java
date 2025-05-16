@@ -68,4 +68,9 @@ public class StudentController {
         List<Student> studentList = studentService.getStudentBySem(sem);
         return studentList;
     }
+
+//    @GetMapping("/get-list-of-authors")
+//    public List<Author> getListOfAuthors(@RequestParam String student_name) {
+//        return studentService.getAuthorsByStudentName(student_name);
+//    }
 }

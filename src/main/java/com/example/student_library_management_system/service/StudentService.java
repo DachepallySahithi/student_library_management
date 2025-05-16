@@ -2,8 +2,11 @@ package com.example.student_library_management_system.service;
 
 import com.example.student_library_management_system.converters.StudentConverter;
 import com.example.student_library_management_system.enums.CardStatus;
+import com.example.student_library_management_system.model.Author;
+import com.example.student_library_management_system.model.Book;
 import com.example.student_library_management_system.model.Card;
 import com.example.student_library_management_system.model.Student;
+import com.example.student_library_management_system.repository.AuthorRepository;
 import com.example.student_library_management_system.repository.StudentRepository;
 import com.example.student_library_management_system.requestdto.StudentRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,17 +31,18 @@ public class StudentService {
         Card card = new Card();
         card.setCardStatus(CardStatus.ACTIVE);
         card.setStudent(student);
-
         student.setCard(card);
-
         studentRepository.save(student);
         return "Student Saved Successfully";
     }
 
     public Student getStudentById(int studentId){
         Optional<Student> studentOptional = studentRepository.findById(studentId);
-        Student student = studentOptional.get();
-        return student;
+        if(studentOptional.isPresent()){
+            Student student = studentOptional.get();
+            return student;
+        }
+        else return new Student();
     }
 
     public List<Student> getAllStudents(){
@@ -81,7 +86,6 @@ public class StudentService {
         }
     }
 
-
     public List<Student> getStudentByDepartment(String department){
         List<Student> studentList = studentRepository.findByDepartment(department);
         return studentList;
@@ -90,5 +94,16 @@ public class StudentService {
     public List<Student> getStudentBySem(String sem){
         List<Student> studentList = studentRepository.findByDepartment(sem);
         return studentList;
+    }
+
+    public List<Author> getAuthorsByStudentName(String studentName){
+            Student student=studentRepository.findByName(studentName);
+            Card card = student.getCard();
+            List<Book> books= card.getBooksIssuedToCard();
+            List<Author> authors= new ArrayList<>();
+            for(int i=0;i<books.size();i++){
+                authors.add(books.get(i).getAuthor());
+            }
+            return authors;
     }
 }
