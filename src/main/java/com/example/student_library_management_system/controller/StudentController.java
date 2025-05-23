@@ -21,7 +21,7 @@ public class StudentController {
         return response;
     }
 
-    @GetMapping("/find{studentId}")
+    @GetMapping("/find/{studentId}")
     public Student getStudentById(@PathVariable int studentId){
         Student student = studentService.getStudentById(studentId);
         return student;
@@ -33,19 +33,13 @@ public class StudentController {
         return studentList;
     }
 
-    @GetMapping("/findByPage")
-    public List<Student> getStudentsByPages(@RequestParam int pageNo, @RequestParam int pageSize, @RequestParam String sortInput){
-        List<Student> studentList = studentService.getStudentsBasedOnPage(pageNo, pageSize, sortInput);
-        return studentList;
-    }
-
     @GetMapping("/count")
     public String countStudents(){
        long count = studentService.countStudents();
        return "Total students present in database are :" +count;
     }
 
-    @DeleteMapping("/delete{studentId}")
+    @DeleteMapping("/delete/{studentId}")
     public String deleteStudentById(@PathVariable int studentId){
         String response = studentService.deleteStudentById(studentId);
         return response;

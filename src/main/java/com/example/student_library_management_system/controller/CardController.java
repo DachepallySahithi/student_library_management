@@ -5,6 +5,7 @@ import com.example.student_library_management_system.enums.CardStatus;
 import com.example.student_library_management_system.requestdto.CardRequestDto;
 import com.example.student_library_management_system.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +30,10 @@ public class CardController {
     @DeleteMapping("/delete/{cardId}")
     public String deleteCard(@PathVariable int cardId){
         return cardService.deleteCard(cardId);
+    }
+
+    @GetMapping("/print")
+    public ResponseEntity printCard(@RequestParam int studentId){
+        return cardService.printCard(studentId);
     }
 }
