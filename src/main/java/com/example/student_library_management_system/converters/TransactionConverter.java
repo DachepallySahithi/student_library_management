@@ -9,7 +9,7 @@ public class TransactionConverter {
         Transaction transaction = Transaction.builder()
                 .transactionStatus(transactionRequestDto.getTransactionStatus())
                 .fine(transactionRequestDto.getFine())
-                .issueOrReturn(transactionRequestDto.isIssueOrReturn())
+                .issueOrReturn(transactionRequestDto.getIssueOrReturn())
                 .dueDate(transactionRequestDto.getDueDate())
                 .build();
         return transaction;

@@ -6,11 +6,10 @@ import lombok.Data;
 
 @Data
 public class TransactionRequestDto {
-
+    private int cardId;
+    private int bookId;
+    private String dueDate;
     private TransactionStatus transactionStatus;
     private double fine;
-    private boolean issueOrReturn;
-    private String dueDate;
-    private int bookId;
-    private int cardId;
+    private String issueOrReturn;
 }

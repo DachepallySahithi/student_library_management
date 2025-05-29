@@ -10,6 +10,8 @@ import com.example.student_library_management_system.repository.BookRepository;
 import com.example.student_library_management_system.repository.CardRepository;
 import com.example.student_library_management_system.requestdto.BookRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,52 +28,56 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public String addBook(BookRequestDto bookRequestDto){
-
+    public ResponseEntity<String> addBook(BookRequestDto bookRequestDto){
         Book book = BookConverter.convertBookRequestDtoIntoBook(bookRequestDto);
 
         //from authorId we get whole author details
-        Author author = authorRepository.findById(bookRequestDto.getAuthorId()).get();
-        book.setAuthor(author);
-
+        if(authorRepository.existsById(bookRequestDto.getAuthorId())){
+            Author author = authorRepository.findById(bookRequestDto.getAuthorId()).get();
+            book.setAuthor(author);
+        }
+        else
+            return ResponseEntity.status(HttpStatus.OK).body("Author Does not exists");
         //from cardId we get card details
         Optional<Card> card = cardRepository.findById(bookRequestDto.getCardId());
         if(card.isPresent()){
             if(card.get().getCardStatus().equals(CardStatus.ACTIVE)){
                 book.setCard(card.get());
                 bookRepository.save(book);
-                return "Book Saved into database";
+                return ResponseEntity.status(HttpStatus.OK).body("Book Saved into database");
             }
             else{
-                return "Your card is "+card.get().getCardStatus()+" So we cannot Allocate this Book";
+                return ResponseEntity.status(HttpStatus.OK).body("Your card is "+card.get().getCardStatus()+" So we cannot Allocate this Book");
             }
-        }else{
-            return "Card Does not exists";
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.OK).body("Card Does not exists");
         }
     }
 
-
-    public String updateBook(int bookId, BookRequestDto bookRequestDto) {
+    public ResponseEntity<String> updateBook(int bookId, BookRequestDto bookRequestDto) {
         if(bookRepository.existsById(bookId)){
             Book book = bookRepository.getById(bookId);
             book.setName(bookRequestDto.getName());
             book.setPages(bookRequestDto.getPages());
             book.setPublisherName(bookRequestDto.getPublisherName());
             book.setGenre(bookRequestDto.getGenre());
-            book.setAvailable(bookRequestDto.isAvailable());
+            book.setAvailable(bookRequestDto.isAvailable()?1:0);
             bookRepository.save(book);
-            return "Book updated successfully";
+            return ResponseEntity.status(HttpStatus.OK).body("Book updated successfully");
         }
         else{
-            return "Book not found";
+            return ResponseEntity.status(HttpStatus.OK).body("Book not found");
         }
     }
     //delete
-    public String deleteBookById(int bookId){
+    public ResponseEntity<String> deleteBookById(int bookId){
         if(bookRepository.existsById(bookId)){
             bookRepository.deleteById(bookId);
-            return "book deleted";
+            return ResponseEntity.status(HttpStatus.OK).body("Book deleted");
         }
-        else return "book does not exists";
+        else {
+            return ResponseEntity.status(HttpStatus.OK).body("Book does not exists");
+        }
     }
 }

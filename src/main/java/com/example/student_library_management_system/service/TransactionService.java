@@ -9,6 +9,8 @@ import com.example.student_library_management_system.repository.CardRepository;
 import com.example.student_library_management_system.repository.TransactionRepository;
 import com.example.student_library_management_system.requestdto.TransactionRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +25,7 @@ public class TransactionService {
     @Autowired
     private BookRepository bookRepository;
 
-    public String addTransaction(TransactionRequestDto transactionRequestDto){
+    public ResponseEntity<String> addTransaction(TransactionRequestDto transactionRequestDto){
         Transaction transaction = TransactionConverter.convertTransactionRequestDtoIntoTransaction(transactionRequestDto);
 
         Card card = cardRepository.findById(transactionRequestDto.getCardId()).get();
@@ -33,6 +35,6 @@ public class TransactionService {
         transaction.setBook(book);
 
         transactionRepository.save(transaction);
-        return "Transaction added successfully";
+        return ResponseEntity.status(HttpStatus.OK).body("Transaction added successfully");
     }
 }

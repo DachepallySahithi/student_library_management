@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/card/apis")
 public class CardController {
@@ -16,19 +17,19 @@ public class CardController {
     private CardService cardService;
 
     @PostMapping("/save")
-    public String saveCard(@RequestBody CardRequestDto cardRequestDto){
-        String response = cardService.addCard(cardRequestDto);
+    public ResponseEntity<String> saveCard(@RequestBody CardRequestDto cardRequestDto){
+        ResponseEntity<String> response = cardService.addCard(cardRequestDto);
         return response;
     }
 
     @PutMapping("/update/{cardId}")
-    public String updateCard(@PathVariable int cardId, @RequestBody CardRequestDto cardRequestDto){
-        String response = cardService.updateCard(cardId, cardRequestDto);
+    public ResponseEntity<String> updateCard(@PathVariable int cardId, @RequestBody CardRequestDto cardRequestDto){
+        ResponseEntity<String> response = cardService.updateCard(cardId, cardRequestDto);
         return response;
     }
 
     @DeleteMapping("/delete/{cardId}")
-    public String deleteCard(@PathVariable int cardId){
+    public ResponseEntity<String> deleteCard(@PathVariable int cardId){
         return cardService.deleteCard(cardId);
     }
 

@@ -2,10 +2,7 @@ package com.example.student_library_management_system.service;
 
 import com.example.student_library_management_system.converters.StudentConverter;
 import com.example.student_library_management_system.enums.CardStatus;
-import com.example.student_library_management_system.model.Author;
-import com.example.student_library_management_system.model.Book;
-import com.example.student_library_management_system.model.Card;
-import com.example.student_library_management_system.model.Student;
+import com.example.student_library_management_system.model.*;
 import com.example.student_library_management_system.repository.AuthorRepository;
 import com.example.student_library_management_system.repository.StudentRepository;
 import com.example.student_library_management_system.requestdto.StudentRequestDto;
@@ -13,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +24,20 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public String addStudent(StudentRequestDto studentRequestDto){
+    public ResponseEntity<String> studentLogin(StudentRequestDto studentRequestDto){
+        if(studentRepository.existsByEmail(studentRequestDto.getEmail())){
+            Student student=studentRepository.findByEmail(studentRequestDto.getEmail());
+            if(studentRequestDto.getPassword().equals(String.valueOf(student.getId())))
+                return ResponseEntity.status(HttpStatus.OK).body("Student Can Login");
+            else
+                return ResponseEntity.status(HttpStatus.OK).body("Please enter correct Password");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.OK).body("Student Does not exists");
+        }
+    }
+
+    public ResponseEntity<String> addStudent(StudentRequestDto studentRequestDto){
         Student student = StudentConverter.convertStudentRequestDtoIntoStudent(studentRequestDto);
 
         Card card = new Card();
@@ -33,7 +45,7 @@ public class StudentService {
         card.setStudent(student);
         student.setCard(card);
         studentRepository.save(student);
-        return "Student Saved Successfully";
+        return ResponseEntity.status(HttpStatus.OK).body("Student Saved Successfully");
     }
 
     public Student getStudentById(int studentId){
@@ -92,7 +104,7 @@ public class StudentService {
     }
 
     public List<Student> getStudentBySem(String sem){
-        List<Student> studentList = studentRepository.findByDepartment(sem);
+        List<Student> studentList = studentRepository.findBySem(sem);
         return studentList;
     }
 

@@ -37,7 +37,7 @@ public class Transaction {
     private double fine;
 
     @Column(name = "is_issue_or_return", nullable = false)
-    private boolean issueOrReturn;
+    private String issueOrReturn;
 
     @Column(name = "due_date")
     private String dueDate;

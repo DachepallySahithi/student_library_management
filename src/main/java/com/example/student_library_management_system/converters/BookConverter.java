@@ -11,7 +11,7 @@ public class BookConverter {
                 .pages(bookRequestDto.getPages())
                 .publisherName(bookRequestDto.getPublisherName())
                 .genre(bookRequestDto.getGenre())
-                .available(bookRequestDto.isAvailable())
+                .available(bookRequestDto.isAvailable()?1:0)
                 .build();
         return book;
     }

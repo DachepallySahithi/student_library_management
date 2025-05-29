@@ -1,13 +1,17 @@
 package com.example.student_library_management_system.controller;
 
 import com.example.student_library_management_system.model.Student;
+import com.example.student_library_management_system.requestdto.LibrarianRequestDto;
 import com.example.student_library_management_system.requestdto.StudentRequestDto;
 import com.example.student_library_management_system.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/student/apis")
 public class StudentController {
@@ -15,16 +19,16 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @PostMapping("/save")
-    public String saveStudent(@RequestBody StudentRequestDto studentRequestDto){
-        String response = studentService.addStudent(studentRequestDto);
+    @PostMapping("/login")
+    public ResponseEntity studentLogin(@RequestBody StudentRequestDto studentRequestDto){
+        ResponseEntity response=studentService.studentLogin(studentRequestDto);
         return response;
     }
 
-    @GetMapping("/find/{studentId}")
-    public Student getStudentById(@PathVariable int studentId){
-        Student student = studentService.getStudentById(studentId);
-        return student;
+    @PostMapping("/save")
+    public ResponseEntity saveStudent(@RequestBody StudentRequestDto studentRequestDto){
+        ResponseEntity response = studentService.addStudent(studentRequestDto);
+        return response;
     }
 
     @GetMapping("/findAll")
@@ -51,6 +55,14 @@ public class StudentController {
         return response;
     }
 
+    @GetMapping("/find/{studentId}")
+    public List<Student> getStudentById(@PathVariable int studentId){
+        Student student = studentService.getStudentById(studentId);
+        List<Student> studentList=new ArrayList<>();
+        studentList.add(student);
+        return studentList;
+    }
+
     @GetMapping("/findByDept")
     public List<Student> getStudentByDepartment(@RequestParam String department){
         List<Student> studentList = studentService.getStudentByDepartment(department);
@@ -62,9 +74,4 @@ public class StudentController {
         List<Student> studentList = studentService.getStudentBySem(sem);
         return studentList;
     }
-
-//    @GetMapping("/get-list-of-authors")
-//    public List<Author> getListOfAuthors(@RequestParam String student_name) {
-//        return studentService.getAuthorsByStudentName(student_name);
-//    }
 }

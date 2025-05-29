@@ -13,6 +13,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,46 +36,48 @@ public class CardService {
     BookRepository bookRepository;
 
     //add
-    public String addCard(CardRequestDto cardRequestDto){
+    public ResponseEntity<String> addCard(CardRequestDto cardRequestDto){
         Optional<Student> student = studentRepository.findById(cardRequestDto.getStudentId());
         if(student.isPresent()){
             if(cardRepository.existsByStudent_Id(student.get().getId())){
-                return "Card Already Alloted to "+student.get().getName();
+                return ResponseEntity.status(HttpStatus.OK).body("Card Already Alloted to "+student.get().getName());
             }
             else{
                 Card card = CardConverter.convertCardRequestDtoIntoCard(cardRequestDto,student.get());
                 cardRepository.save(card);
-                return "Card Alloted to "+student.get().getName();
+                return ResponseEntity.status(HttpStatus.OK).body("Card Alloted to "+student.get().getName());
             }
         }
         else{
-            return "Student Does not exist";
+            return ResponseEntity.status(HttpStatus.OK).body("Student Does not exist");
         }
     }
 
     //update
-    public String updateCard(int cardId, CardRequestDto cardRequestDto){
+    public ResponseEntity<String> updateCard(int cardId, CardRequestDto cardRequestDto){
         //Card card = CardRequestDto.findById(cardId);
         Optional<Card> optionalCard = cardRepository.findById(cardId);
         if(optionalCard.isPresent()){
             Card card = optionalCard.get();
+            if(card.getStudent().getId()!=cardRequestDto.getStudentId())
+                return ResponseEntity.status(HttpStatus.OK).body("Card does not belong to the Student");
             card.setCardStatus(cardRequestDto.getCardStatus());
             cardRepository.save(card);
-            return "Card updated successfully";
+            return ResponseEntity.status(HttpStatus.OK).body("Card updated successfully");
         }
         else{
-            return "Card not found";
+            return ResponseEntity.status(HttpStatus.OK).body("Card not found");
         }
     }
 
     //delete
-    public String deleteCard(int cardId){
+    public ResponseEntity<String> deleteCard(int cardId){
         if(cardRepository.existsById(cardId)){
             cardRepository.deleteById(cardId);
-            return "Card deleted successfully";
+            return ResponseEntity.status(HttpStatus.OK).body("Card deleted successfully");
         }
         else{
-            return "Card Id not found";
+            return ResponseEntity.status(HttpStatus.OK).body("Card not found");
         }
     }
     //print

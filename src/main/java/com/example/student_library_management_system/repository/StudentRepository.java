@@ -15,6 +15,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     //1. writing own methods with fields / attributes with JPA support
     public Student findByEmail(String email);
     public Student findByName(String student_name);
+    public boolean existsByEmail(String email);
     public List<Student> findBySem(String sem);
     public List<Student> findByDepartment(String department);
     public List<Student> findBySemAndDepartment(String sem, String department);

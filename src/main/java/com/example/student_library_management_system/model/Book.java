@@ -20,8 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Book {
-
-
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +39,7 @@ public class Book {
     private Genre genre;
 
     @Column(name = "is_available", nullable = false)
-    private boolean available;
+    private int available;
 
     @JsonBackReference
     @ManyToOne
