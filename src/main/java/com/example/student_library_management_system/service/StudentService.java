@@ -37,9 +37,18 @@ public class StudentService {
         }
     }
 
+    public List<Student> getAllStudents(){
+        List<Student> studentList = studentRepository.findAll();
+        return studentList;
+    }
+
+    public long countStudents(){
+        long count = studentRepository.count();
+        return count;
+    }
+
     public ResponseEntity<String> addStudent(StudentRequestDto studentRequestDto){
         Student student = StudentConverter.convertStudentRequestDtoIntoStudent(studentRequestDto);
-
         Card card = new Card();
         card.setCardStatus(CardStatus.ACTIVE);
         card.setStudent(student);
@@ -55,26 +64,6 @@ public class StudentService {
             return student;
         }
         else return new Student();
-    }
-
-    public List<Student> getAllStudents(){
-        List<Student> studentList = studentRepository.findAll();
-        return studentList;
-    }
-
-    //Paging & sorting:
-
-    public List<Student> getStudentsBasedOnPage(int pageNo, int pageSize, String sortInput){
-
-        Page<Student> studentPage = studentRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortInput).ascending()));
-        List<Student> studentList = studentPage.getContent();
-        return studentList;
-    }
-
-
-    public long countStudents(){
-        long count = studentRepository.count();
-        return count;
     }
 
     public String deleteStudentById(int studentId){
@@ -105,6 +94,13 @@ public class StudentService {
 
     public List<Student> getStudentBySem(String sem){
         List<Student> studentList = studentRepository.findBySem(sem);
+        return studentList;
+    }
+
+    //Paging & sorting:
+    public List<Student> getStudentsBasedOnPage(int pageNo, int pageSize, String sortInput){
+        Page<Student> studentPage = studentRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortInput).ascending()));
+        List<Student> studentList = studentPage.getContent();
         return studentList;
     }
 

@@ -86,6 +86,7 @@ public class CardService {
         Optional<Card> card = cardRepository.findByStudent_Id(studentId);// getting card details from card table using studentId
         if(student.isPresent()) {
             if(card.isPresent()){
+                //ByteArrayInputStream turns a byte array into an input stream
                 ByteArrayInputStream pdfStream = createPdf(student.get(),card.get());
                 byte[] pdfBytes = pdfStream.readAllBytes();
 
@@ -94,6 +95,7 @@ public class CardService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Content-Disposition", "attachment; filename="+filename);
                 headers.add("X-Message", "Card Downloaded Successfully");
+                headers.add("Access-Control-Expose-Headers", "Content-Disposition, X-Message");
 
                 return ResponseEntity.ok()
                         .headers(headers)
@@ -137,7 +139,7 @@ public class CardService {
             PdfPTable detailsTable = new PdfPTable(2);  //PdfPTable is used for creating table
             detailsTable.setWidthPercentage(100);
             detailsTable.addCell("Student ID: "+student.getId()); //addCell ->  adds a cell (box) in the table
-            detailsTable.addCell("Card Id: "+card.getId());
+            detailsTable.addCell("Card Id: "+card.getId()); //addCell -> block or each box
             detailsTable.addCell("Name: "+student.getName());
             detailsTable.addCell("Email: "+student.getEmail());
             detailsTable.addCell("Date of Birth: "+student.getDob());
@@ -183,7 +185,26 @@ public class CardService {
 
         return new ByteArrayInputStream(out.toByteArray());
         // converts the currently stored data in the ByteArrayOutputStream into a byte array (byte[])
+        // because
     }
 }
+/*
+iText Document <=> BAOS [linked both]
+Load all Info into Document
+convert BAOS to Byte[]
+convert Byte[] to BAIS
 
-//addCell -> block or each box
+All files are stored as Binary data in Hard-Disk/Memory.
+In Java it is represented as bytes and to maintain sequence
+byte[]. This helps is sending byte[] as http response or store
+in database as BLOB.
+
+BAIS reads the byte[] sequentially in chunks like a stream,
+if we use byte[] directly for reading it loads whole file.
+Efficient and Sequential
+Used to read byte[]
+
+BAOS writes to byte[] sequentially which it internally maintains,
+as we dont know the exact final size of the data we cannot use byte[]
+Efficient and Sequential
+Used when we want to generate files/media */

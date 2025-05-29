@@ -40,7 +40,7 @@ public class BookService {
             return ResponseEntity.status(HttpStatus.OK).body("Author Does not exists");
         //from cardId we get card details
         Optional<Card> card = cardRepository.findById(bookRequestDto.getCardId());
-        if(card.isPresent()){
+        if(card.isPresent()){ //cardId = 0 indicates this book is not assigned to any student
             if(card.get().getCardStatus().equals(CardStatus.ACTIVE)){
                 book.setCard(card.get());
                 bookRepository.save(book);
@@ -50,6 +50,10 @@ public class BookService {
                 return ResponseEntity.status(HttpStatus.OK).body("Your card is "+card.get().getCardStatus()+" So we cannot Allocate this Book");
             }
         }
+        else if(bookRequestDto.getCardId() == 0){
+            bookRepository.save(book);
+            return ResponseEntity.status(HttpStatus.OK).body("Book Saved into database");
+        }
         else{
             return ResponseEntity.status(HttpStatus.OK).body("Card Does not exists");
         }
@@ -57,14 +61,24 @@ public class BookService {
 
     public ResponseEntity<String> updateBook(int bookId, BookRequestDto bookRequestDto) {
         if(bookRepository.existsById(bookId)){
+            Optional<Card> card= cardRepository.findById(bookRequestDto.getCardId());
             Book book = bookRepository.getById(bookId);
             book.setName(bookRequestDto.getName());
             book.setPages(bookRequestDto.getPages());
             book.setPublisherName(bookRequestDto.getPublisherName());
             book.setGenre(bookRequestDto.getGenre());
             book.setAvailable(bookRequestDto.isAvailable()?1:0);
+            String status = "Book Updated Successfully";
+            if(card.isPresent())
+                book.setCard(card.get());
+            else if(bookRequestDto.getCardId()==0){
+                status="Book Unallocated Successfully";
+                book.setCard(null);
+            }
+            else
+                status="Card is not Found";
             bookRepository.save(book);
-            return ResponseEntity.status(HttpStatus.OK).body("Book updated successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(status);
         }
         else{
             return ResponseEntity.status(HttpStatus.OK).body("Book not found");

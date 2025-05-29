@@ -16,7 +16,7 @@ public class LibrarianService {
 
     public ResponseEntity<String> addLibrarian(LibrarianRequestDto librarianRequestDto){
         if(librarianRepository.existsByEmail(librarianRequestDto.getEmail()))
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("Librarian Added Successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Librarian Already Exists. Please Login");
         else{
             Librarian librarian= LibrarianConverter.convertLibrarianRequestDtoIntoLibrarian(librarianRequestDto);
             librarianRepository.save(librarian);
