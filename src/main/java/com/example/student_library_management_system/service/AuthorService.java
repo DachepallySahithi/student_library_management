@@ -23,19 +23,19 @@ public class AuthorService {
     }
 
     //update
-
-    public String updateAuthor(int id, Map<String, Object> authorRequestMap){
+    public String updateAuthor(int id, AuthorRequestDto authorRequestDto){
         try{
+            if(!authorRepository.existsById(id))
+                return "Author Id Doesnot exist. Please enter correct id";
             Author author = authorRepository.findAuthorById(id);
-            /*int id, @AuthorRequestDTO authorRequestDTO
             author.setName(authorRequestDto.getName());
             author.setGender(authorRequestDto.getGender());
             author.setCountry(authorRequestDto.getCountry());
-            author.setRating(authorRequestDto.getRating());*/
-            if(authorRequestMap.containsKey("name"))author.setName(authorRequestMap.get("name").toString());
+            author.setRating(authorRequestDto.getRating());
+            /*if(authorRequestMap.containsKey("name"))author.setName(authorRequestMap.get("name").toString());
             if(authorRequestMap.containsKey("country"))author.setCountry(authorRequestMap.get("country").toString());
             if(authorRequestMap.containsKey("gender"))author.setGender(authorRequestMap.get("gender").toString());
-            if(authorRequestMap.containsKey("rating"))author.setRating((Double)authorRequestMap.get("rating"));
+            if(authorRequestMap.containsKey("rating"))author.setRating((Double)authorRequestMap.get("rating"));*/
             authorRepository.save(author);
             return "Author Updated Successfully";
         }

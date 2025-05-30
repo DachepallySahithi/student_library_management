@@ -68,7 +68,7 @@ public class StudentService {
 
     public String deleteStudentById(int studentId){
         studentRepository.deleteById(studentId);
-        return "student deleted";
+        return "Student Deleted Successfully";
     }
 
     public String updateStudent(int studentId, StudentRequestDto newstudentRequestDto){
@@ -81,7 +81,7 @@ public class StudentService {
             student.setEmail(newstudentRequestDto.getEmail());
             student.setDepartment(newstudentRequestDto.getDepartment());
             studentRepository.save(student);
-            return "student updated successfully";
+            return "Student Updated Successfully";
         }else{
             return "Cannot find student to update";
         }
