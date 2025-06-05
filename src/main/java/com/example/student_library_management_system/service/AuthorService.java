@@ -26,8 +26,8 @@ public class AuthorService {
     public String updateAuthor(int id, AuthorRequestDto authorRequestDto){
         try{
             if(!authorRepository.existsById(id))
-                return "Author Id Doesnot exist. Please enter correct id";
-            Author author = authorRepository.findAuthorById(id);
+                return "Author Id Does not exist. Please enter correct id";
+            Author author = authorRepository.findAuthorById(id); //if author exists
             author.setName(authorRequestDto.getName());
             author.setGender(authorRequestDto.getGender());
             author.setCountry(authorRequestDto.getCountry());

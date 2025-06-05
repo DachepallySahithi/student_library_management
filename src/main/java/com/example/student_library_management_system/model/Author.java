@@ -21,7 +21,7 @@ public class Author {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)

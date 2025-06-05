@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LibrarianService {
-    @Autowired
+    @Autowired //automatically injects the dependencies
     LibrarianRepository librarianRepository;
 
     public ResponseEntity<String> addLibrarian(LibrarianRequestDto librarianRequestDto){
@@ -26,8 +26,8 @@ public class LibrarianService {
 
     public ResponseEntity<String> librarianLogin(LibrarianRequestDto librarianRequestDto){
         if(librarianRepository.existsByEmail(librarianRequestDto.getEmail())){
-            Librarian librarian=librarianRepository.findLibrarianByEmail(librarianRequestDto.getEmail());
-            if(librarianRequestDto.getPassword().equals(librarian.getPassword()))
+            Librarian librarian=librarianRepository.findLibrarianByEmail(librarianRequestDto.getEmail());//returns lib entity from db using findlibbyemail
+            if(librarianRequestDto.getPassword().equals(librarian.getPassword()))//compares password from reqdto with password in db
                 return ResponseEntity.status(HttpStatus.OK).body("Librarian Can Login");
             else
                 return ResponseEntity.status(HttpStatus.OK).body("Please enter correct Password");

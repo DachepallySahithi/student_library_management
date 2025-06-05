@@ -5,15 +5,15 @@ import com.example.student_library_management_system.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/author/apis")
-public class AuthorController {
+public class AuthorController { //Target Bean
 
     @Autowired
-    private AuthorService authorService;
+    private AuthorService authorService; //Dependent Bean
+    //Dependency Injuction is injucting Dependent Bean into Target Bean
+    //Eg: Here We are Injucting Author Service into Author Controller
 
     @PostMapping("/save")
     public String saveAuthor(@RequestBody AuthorRequestDto authorRequestDto){

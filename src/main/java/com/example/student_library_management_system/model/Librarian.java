@@ -6,19 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity //marks class as JPA entity
 @Table(name = "librarian")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor //automatically generates a constructor with 1 parameter for each field in class
+@NoArgsConstructor //generates constructor with no parameters
+@Builder //generates boilerplate code for builder pattern
 public class Librarian {
-    @Id
+    @Id //marks field as PK of entity
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false) //col in db must not contain null values
     private String name;
 
     @Column(nullable = false)
